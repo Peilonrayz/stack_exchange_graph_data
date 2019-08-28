@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Coroutines &#8212; Stack Exchange Graph Data  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Helpers" href="helpers.html" />
+    <link rel="prev" title="SE Graph Data" href="stack_exchange_graph_data.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="coroutines">
+<span id="id1"></span><h1>Coroutines<a class="headerlink" href="#coroutines" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-stack_exchange_graph_data.coroutines"></span><p>Coroutines containing the apps business logic.</p>
+<p>A diagram showing all the interactions between these coroutines is
+available in the <a class="reference internal" href="stack_exchange_graph_data.html#driver"><span class="std std-ref">Driver</span></a> documentation.</p>
+<div class="section" id="module-stack_exchange_graph_data.coroutines.data_sources">
+<span id="data-sources"></span><h2>Data Sources<a class="headerlink" href="#module-stack_exchange_graph_data.coroutines.data_sources" title="Permalink to this headline">¶</a></h2>
+<p>Coroutines for converting from source data to internal data.</p>
+<dl class="function">
+<dt id="stack_exchange_graph_data.coroutines.data_sources.get_comment_links">
+<code class="sig-prename descclassname">stack_exchange_graph_data.coroutines.data_sources.</code><code class="sig-name descname">get_comment_links</code><span class="sig-paren">(</span><em class="sig-param">target: Generator</em><span class="sig-paren">)</span> &#x2192; Generator<a class="headerlink" href="#stack_exchange_graph_data.coroutines.data_sources.get_comment_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all wanted links in comments.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.coroutines.data_sources.get_post_links">
+<code class="sig-prename descclassname">stack_exchange_graph_data.coroutines.data_sources.</code><code class="sig-name descname">get_post_links</code><span class="sig-paren">(</span><em class="sig-param">link_target: Generator</em>, <em class="sig-param">node_target: Generator</em><span class="sig-paren">)</span> &#x2192; Generator<a class="headerlink" href="#stack_exchange_graph_data.coroutines.data_sources.get_post_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all wanted data from posts.</p>
+<p>Gets all http links, and includes links from the parent post
+(question) to child posts (answer).</p>
+<p>Includes all questions and answers in node output.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.coroutines.data_sources.load_comments">
+<code class="sig-prename descclassname">stack_exchange_graph_data.coroutines.data_sources.</code><code class="sig-name descname">load_comments</code><span class="sig-paren">(</span><em class="sig-param">site_name: str</em>, <em class="sig-param">target: Generator</em><span class="sig-paren">)</span> &#x2192; Generator<a class="headerlink" href="#stack_exchange_graph_data.coroutines.data_sources.load_comments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read comments from external format into internal format.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.coroutines.data_sources.load_posts">
+<code class="sig-prename descclassname">stack_exchange_graph_data.coroutines.data_sources.</code><code class="sig-name descname">load_posts</code><span class="sig-paren">(</span><em class="sig-param">target: Generator</em><span class="sig-paren">)</span> &#x2192; Generator<a class="headerlink" href="#stack_exchange_graph_data.coroutines.data_sources.load_posts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read posts from external format into internal format.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-stack_exchange_graph_data.coroutines.links">
+<span id="links"></span><h2>Links<a class="headerlink" href="#module-stack_exchange_graph_data.coroutines.links" title="Permalink to this headline">¶</a></h2>
+<p>Link coroutine control flow functions.</p>
+<dl class="function">
+<dt id="stack_exchange_graph_data.coroutines.links.filter_duplicates">
+<code class="sig-prename descclassname">stack_exchange_graph_data.coroutines.links.</code><code class="sig-name descname">filter_duplicates</code><span class="sig-paren">(</span><em class="sig-param">target: Generator</em><span class="sig-paren">)</span> &#x2192; Generator<a class="headerlink" href="#stack_exchange_graph_data.coroutines.links.filter_duplicates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove duplicate links from the output.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.coroutines.links.filter_links">
+<code class="sig-prename descclassname">stack_exchange_graph_data.coroutines.links.</code><code class="sig-name descname">filter_links</code><span class="sig-paren">(</span><em class="sig-param">domains: Set[str], target: Generator</em><span class="sig-paren">)</span> &#x2192; Generator<a class="headerlink" href="#stack_exchange_graph_data.coroutines.links.filter_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter links to links to posts on the provided site.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.coroutines.links.filter_network_size">
+<code class="sig-prename descclassname">stack_exchange_graph_data.coroutines.links.</code><code class="sig-name descname">filter_network_size</code><span class="sig-paren">(</span><em class="sig-param">arguments: argparse.Namespace</em>, <em class="sig-param">target: Generator</em><span class="sig-paren">)</span> &#x2192; Generator<a class="headerlink" href="#stack_exchange_graph_data.coroutines.links.filter_network_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter networks that aren’t the wanted size.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>arguments</strong> – CLI parser arguments that dictate the min and max size.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.coroutines.links.handle_links">
+<code class="sig-prename descclassname">stack_exchange_graph_data.coroutines.links.</code><code class="sig-name descname">handle_links</code><span class="sig-paren">(</span><em class="sig-param">filter_: Generator</em>, <em class="sig-param">good: Generator</em><span class="sig-paren">)</span> &#x2192; Generator<a class="headerlink" href="#stack_exchange_graph_data.coroutines.links.handle_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send http and id links to correct target.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.coroutines.links.sheet_prep">
+<code class="sig-prename descclassname">stack_exchange_graph_data.coroutines.links.</code><code class="sig-name descname">sheet_prep</code><span class="sig-paren">(</span><em class="sig-param">target: Generator</em><span class="sig-paren">)</span> &#x2192; Generator<a class="headerlink" href="#stack_exchange_graph_data.coroutines.links.sheet_prep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert into the format required to be sent to disk.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-stack_exchange_graph_data.coroutines.nodes">
+<span id="nodes"></span><h2>Nodes<a class="headerlink" href="#module-stack_exchange_graph_data.coroutines.nodes" title="Permalink to this headline">¶</a></h2>
+<p>Node control flow coroutines.</p>
+<dl class="function">
+<dt id="stack_exchange_graph_data.coroutines.nodes.handle_nodes">
+<code class="sig-prename descclassname">stack_exchange_graph_data.coroutines.nodes.</code><code class="sig-name descname">handle_nodes</code><span class="sig-paren">(</span><em class="sig-param">target: Generator</em><span class="sig-paren">)</span> &#x2192; Generator<a class="headerlink" href="#stack_exchange_graph_data.coroutines.nodes.handle_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send all posts to the output, with information about the top 36 tags.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Stack Exchange Graph Data</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="stack_exchange_graph_data.html">SE Graph Data</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="stack_exchange_graph_data.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Coroutines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="helpers.html">Helpers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="segd.html">SEGD</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stack_exchange_graph_data.html#module-stack_exchange_graph_data.__main__">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stack_exchange_graph_data.html#module-stack_exchange_graph_data.cli">CLI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stack_exchange_graph_data.html#driver">Driver</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="stack_exchange_graph_data.html">SE Graph Data</a><ul>
+      <li>Previous: <a href="stack_exchange_graph_data.html" title="previous chapter">SE Graph Data</a></li>
+      <li>Next: <a href="helpers.html" title="next chapter">Helpers</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Peilonrayz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/docs/coroutines.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

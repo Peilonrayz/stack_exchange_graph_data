@@ -1,0 +1,459 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>SEGD &#8212; Stack Exchange Graph Data  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Helpers" href="helpers.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-stack_exchange_graph_data.segd">
+<span id="segd"></span><h1>SEGD<a class="headerlink" href="#module-stack_exchange_graph_data.segd" title="Permalink to this headline">¶</a></h1>
+<p>Business logic for getting and extracting Stack Exchange information.</p>
+<p>This package contains code that contains business logic rather than code
+that is reasonably generic. Code that could reasonably be it’s own PyPI
+package is stored in the <a class="reference internal" href="helpers.html#helpers"><span class="std std-ref">Helpers</span></a> package. The benefits for this
+approach are described in the <a class="reference internal" href="helpers.html#helpers"><span class="std std-ref">Helpers</span></a> section.</p>
+<p>This code also doesn’t include any <a class="reference internal" href="coroutines.html#coroutines"><span class="std std-ref">Coroutines</span></a>, this is as coroutines
+have a very different design to normal code. Keeping them separate
+should help reduced confusion, this is as you can enter either package
+with one design mentality and not have to change their thought process at
+random points in the package.</p>
+<p>An example of the difference is <a class="reference internal" href="#module-stack_exchange_graph_data.segd.cache" title="stack_exchange_graph_data.segd.cache"><code class="xref py py-mod docutils literal notranslate"><span class="pre">stack_exchange_graph_data.segd.cache</span></code></a>
+which utilizes <a class="reference internal" href="helpers.html#module-stack_exchange_graph_data.helpers.cache" title="stack_exchange_graph_data.helpers.cache"><code class="xref py py-mod docutils literal notranslate"><span class="pre">stack_exchange_graph_data.helpers.cache</span></code></a>. The
+latter exposes a simple reusable interface, where the former uses that
+interface to build the bespoke endpoints for SEGD.</p>
+<div class="section" id="module-stack_exchange_graph_data.segd.cache">
+<span id="cache"></span><h2>Cache<a class="headerlink" href="#module-stack_exchange_graph_data.segd.cache" title="Permalink to this headline">¶</a></h2>
+<p>SEGD cache endpoints.</p>
+<dl class="class">
+<dt id="stack_exchange_graph_data.segd.cache.Cache">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.segd.cache.</code><code class="sig-name descname">Cache</code><span class="sig-paren">(</span><em class="sig-param">cache_dir: pathlib.Path</em>, <em class="sig-param">archive: str</em><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.segd.cache.Cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>SEGD Cache object.</p>
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.cache.Cache.site_archive">
+<code class="sig-name descname">site_archive</code><span class="sig-paren">(</span><em class="sig-param">site: stack_exchange_graph_data.segd.site_info.SiteInfo</em><span class="sig-paren">)</span> &#x2192; stack_exchange_graph_data.helpers.cache.FileCache<a class="headerlink" href="#stack_exchange_graph_data.segd.cache.Cache.site_archive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint for the site’s 7z archive.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>site</strong> – The site info object of the wanted archive.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.cache.Cache.site_file">
+<code class="sig-name descname">site_file</code><span class="sig-paren">(</span><em class="sig-param">site: stack_exchange_graph_data.segd.site_info.SiteInfo</em>, <em class="sig-param">file_path: str</em><span class="sig-paren">)</span> &#x2192; stack_exchange_graph_data.helpers.cache.Archive7zCache<a class="headerlink" href="#stack_exchange_graph_data.segd.cache.Cache.site_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint for the site’s unarchived data.</p>
+<p>These are files such as <code class="code docutils literal notranslate"><span class="pre">Comments.xml</span></code> or <code class="code docutils literal notranslate"><span class="pre">Posts.xml</span></code>.
+These contain the actual data from the Stack Exchange data dump.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>site</strong> – The site info object of the wanted data dump data.</p></li>
+<li><p><strong>file_path</strong> – The unarchived file wanted - <code class="code docutils literal notranslate"><span class="pre">Comments.xml</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.cache.Cache.sites">
+<em class="property">property </em><code class="sig-name descname">sites</code><a class="headerlink" href="#stack_exchange_graph_data.segd.cache.Cache.sites" title="Permalink to this definition">¶</a></dt>
+<dd><p>Endpoint for the <code class="code docutils literal notranslate"><span class="pre">Sites.xml</span></code> file.</p>
+<p>This contains metadata about all sites. This allows us to use a
+short hand name to get the required site domain. It also allows
+us to easily see if the site requested even exists.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-stack_exchange_graph_data.segd.file_system">
+<span id="file-system"></span><h2>File System<a class="headerlink" href="#module-stack_exchange_graph_data.segd.file_system" title="Permalink to this headline">¶</a></h2>
+<p>Holds the driving segments of the program.</p>
+<dl class="class">
+<dt id="stack_exchange_graph_data.segd.file_system.FileSystem">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.segd.file_system.</code><code class="sig-name descname">FileSystem</code><span class="sig-paren">(</span><em class="sig-param">segd_cache: stack_exchange_graph_data.segd.cache.Cache</em><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.segd.file_system.FileSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>File System interactions.</p>
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.file_system.FileSystem._get_site_info">
+<code class="sig-name descname">_get_site_info</code><span class="sig-paren">(</span><em class="sig-param">site_name: str</em>, <em class="sig-param">use_cache: bool</em><span class="sig-paren">)</span> &#x2192; Any<a class="headerlink" href="#stack_exchange_graph_data.segd.file_system.FileSystem._get_site_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filter sites to just the wanted site.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>site_name</strong> – Name of site to get data for.</p></li>
+<li><p><strong>use_cache</strong> – Set to false to force redownload of data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Raw site data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.file_system.FileSystem.get_site_archive">
+<code class="sig-name descname">get_site_archive</code><span class="sig-paren">(</span><em class="sig-param">site: stack_exchange_graph_data.segd.site_info.SiteInfo</em>, <em class="sig-param">use_cache: bool = True</em><span class="sig-paren">)</span> &#x2192; pathlib.Path<a class="headerlink" href="#stack_exchange_graph_data.segd.file_system.FileSystem.get_site_archive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure the site’s 7z archive is in cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>site</strong> – The site info object of the wanted archive.</p></li>
+<li><p><strong>use_cache</strong> – Set to false to force redownload of data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The location of the cached 7z archive.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.file_system.FileSystem.get_site_file">
+<code class="sig-name descname">get_site_file</code><span class="sig-paren">(</span><em class="sig-param">site: stack_exchange_graph_data.segd.site_info.SiteInfo</em>, <em class="sig-param">file_path: str</em>, <em class="sig-param">use_cache: bool = True</em><span class="sig-paren">)</span> &#x2192; pathlib.Path<a class="headerlink" href="#stack_exchange_graph_data.segd.file_system.FileSystem.get_site_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a data file from the site’s data dump.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>site</strong> – The site info object of the wanted data dump.</p></li>
+<li><p><strong>use_cache</strong> – Set to false to force redownload of data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The location fo the cached data dump file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.file_system.FileSystem.get_site_info">
+<code class="sig-name descname">get_site_info</code><span class="sig-paren">(</span><em class="sig-param">site_name: str</em>, <em class="sig-param">use_cache: bool = True</em><span class="sig-paren">)</span> &#x2192; stack_exchange_graph_data.segd.site_info.SiteInfo<a class="headerlink" href="#stack_exchange_graph_data.segd.file_system.FileSystem.get_site_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get site information for the provided site.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>site_name</strong> – Name of site to get data for.</p></li>
+<li><p><strong>use_cache</strong> – Set to false to force redownload of data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Object containing site information.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.file_system.FileSystem.get_sites">
+<code class="sig-name descname">get_sites</code><span class="sig-paren">(</span><em class="sig-param">use_cache: bool = True</em><span class="sig-paren">)</span> &#x2192; IO[bytes]<a class="headerlink" href="#stack_exchange_graph_data.segd.file_system.FileSystem.get_sites" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open the <code class="code docutils literal notranslate"><span class="pre">Sites.xml</span></code> file from cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>use_cache</strong> – Set to false to force redownload of data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The <code class="code docutils literal notranslate"><span class="pre">Sites.xml</span></code> file in binary read mode.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-stack_exchange_graph_data.segd.graph">
+<span id="graph"></span><h2>Graph<a class="headerlink" href="#module-stack_exchange_graph_data.segd.graph" title="Permalink to this headline">¶</a></h2>
+<p>Graph mutations.</p>
+<dl class="class">
+<dt id="stack_exchange_graph_data.segd.graph.LinkType">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.segd.graph.</code><code class="sig-name descname">LinkType</code><a class="headerlink" href="#stack_exchange_graph_data.segd.graph.LinkType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Graph link types.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="stack_exchange_graph_data.segd.graph.Node">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.segd.graph.</code><code class="sig-name descname">Node</code><span class="sig-paren">(</span><em class="sig-param">value: int, links: List[Edge], inv_links: List[Node]</em><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.segd.graph.Node" title="Permalink to this definition">¶</a></dt>
+<dd><p>Graph Node.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.segd.graph.find_graph_nodes">
+<code class="sig-prename descclassname">stack_exchange_graph_data.segd.graph.</code><code class="sig-name descname">find_graph_nodes</code><span class="sig-paren">(</span><em class="sig-param">node: stack_exchange_graph_data.segd.graph.Node</em><span class="sig-paren">)</span> &#x2192; Set[int]<a class="headerlink" href="#stack_exchange_graph_data.segd.graph.find_graph_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find all the nodes in a subgraph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>node</strong> – Start node to find subgraph.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Collection on node names in the subgraph.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-stack_exchange_graph_data.segd.models">
+<span id="models"></span><h2>Models<a class="headerlink" href="#module-stack_exchange_graph_data.segd.models" title="Permalink to this headline">¶</a></h2>
+<p>Common models used in control flow.</p>
+<dl class="class">
+<dt id="stack_exchange_graph_data.segd.models.Comment">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.segd.models.</code><code class="sig-name descname">Comment</code><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Comment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Comment data.</p>
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.models.Comment._asdict">
+<code class="sig-name descname">_asdict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Comment._asdict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new OrderedDict which maps field names to their values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.models.Comment._make">
+<em class="property">classmethod </em><code class="sig-name descname">_make</code><span class="sig-paren">(</span><em class="sig-param">iterable</em><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Comment._make" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a new Comment object from a sequence or iterable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.models.Comment._replace">
+<code class="sig-name descname">_replace</code><span class="sig-paren">(</span><em class="sig-param">**kwds</em><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Comment._replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new Comment object replacing specified fields with new values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.models.Comment.body">
+<em class="property">property </em><code class="sig-name descname">body</code><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Comment.body" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.models.Comment.id">
+<em class="property">property </em><code class="sig-name descname">id</code><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Comment.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.models.Comment.links">
+<em class="property">property </em><code class="sig-name descname">links</code><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Comment.links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="stack_exchange_graph_data.segd.models.Post">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.segd.models.</code><code class="sig-name descname">Post</code><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post data.</p>
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.models.Post._asdict">
+<code class="sig-name descname">_asdict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Post._asdict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new OrderedDict which maps field names to their values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.models.Post._make">
+<em class="property">classmethod </em><code class="sig-name descname">_make</code><span class="sig-paren">(</span><em class="sig-param">iterable</em><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Post._make" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a new Post object from a sequence or iterable</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.models.Post._replace">
+<code class="sig-name descname">_replace</code><span class="sig-paren">(</span><em class="sig-param">**kwds</em><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Post._replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a new Post object replacing specified fields with new values</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.models.Post.body">
+<em class="property">property </em><code class="sig-name descname">body</code><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Post.body" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.models.Post.id">
+<em class="property">property </em><code class="sig-name descname">id</code><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Post.id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 0</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.models.Post.links">
+<em class="property">property </em><code class="sig-name descname">links</code><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Post.links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 2</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.models.Post.parent_id">
+<em class="property">property </em><code class="sig-name descname">parent_id</code><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Post.parent_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 4</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.models.Post.tags">
+<em class="property">property </em><code class="sig-name descname">tags</code><a class="headerlink" href="#stack_exchange_graph_data.segd.models.Post.tags" title="Permalink to this definition">¶</a></dt>
+<dd><p>Alias for field number 3</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-stack_exchange_graph_data.segd.site_info">
+<span id="site-information"></span><h2>Site Information<a class="headerlink" href="#module-stack_exchange_graph_data.segd.site_info" title="Permalink to this headline">¶</a></h2>
+<p>Stack Exchange site information.</p>
+<dl class="class">
+<dt id="stack_exchange_graph_data.segd.site_info.SiteInfo">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.segd.site_info.</code><code class="sig-name descname">SiteInfo</code><span class="sig-paren">(</span><em class="sig-param">domain: str</em><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.segd.site_info.SiteInfo" title="Permalink to this definition">¶</a></dt>
+<dd><p>Site information object.</p>
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.site_info.SiteInfo._gen_domain">
+<code class="sig-name descname">_gen_domain</code><span class="sig-paren">(</span><em class="sig-param">old_meta: bool = False</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#stack_exchange_graph_data.segd.site_info.SiteInfo._gen_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate domain for the site.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>old_meta</strong> – This determines if we should use the alternate
+URL form for the output.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The site’s domain in the wanted format.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.site_info.SiteInfo._get_meta">
+<code class="sig-name descname">_get_meta</code><span class="sig-paren">(</span><em class="sig-param">segments: List[str]</em><span class="sig-paren">)</span> &#x2192; Tuple[bool, bool]<a class="headerlink" href="#stack_exchange_graph_data.segd.site_info.SiteInfo._get_meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if domain is a meta site.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>segments</strong> – Unknown domain name segments.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>If the site is a meta site.</p></li>
+<li><p>The form the URL is in.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.segd.site_info.SiteInfo._split_domain">
+<code class="sig-name descname">_split_domain</code><span class="sig-paren">(</span><em class="sig-param">domain: str</em><span class="sig-paren">)</span> &#x2192; Tuple[str, str, bool, bool, bool]<a class="headerlink" href="#stack_exchange_graph_data.segd.site_info.SiteInfo._split_domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Split domain into reusable segments.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>domain</strong> – The domain of the site.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>All information extractable from the domain.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Stack Exchange Graph Data</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="stack_exchange_graph_data.html">SE Graph Data</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="stack_exchange_graph_data.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="coroutines.html">Coroutines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="helpers.html">Helpers</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">SEGD</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stack_exchange_graph_data.html#module-stack_exchange_graph_data.__main__">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stack_exchange_graph_data.html#module-stack_exchange_graph_data.cli">CLI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stack_exchange_graph_data.html#driver">Driver</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="stack_exchange_graph_data.html">SE Graph Data</a><ul>
+      <li>Previous: <a href="helpers.html" title="previous chapter">Helpers</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Peilonrayz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/docs/segd.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

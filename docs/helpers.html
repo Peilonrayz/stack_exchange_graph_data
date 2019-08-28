@@ -1,0 +1,553 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Helpers &#8212; Stack Exchange Graph Data  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="SEGD" href="segd.html" />
+    <link rel="prev" title="Coroutines" href="coroutines.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="helpers">
+<span id="id1"></span><h1>Helpers<a class="headerlink" href="#helpers" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-stack_exchange_graph_data.helpers"></span><p>Helper modules.</p>
+<p>These should be stand alone modules that could reasonably be their own
+PyPI package. This comes with two benefits:</p>
+<ol class="arabic simple">
+<li><p>The library is void of any business data, which makes it easier to
+understand.</p></li>
+<li><p>It means that it is decoupled making it easy to reuse the code in
+different sections of the code. An example is the
+<a class="reference internal" href="#module-stack_exchange_graph_data.helpers.progress" title="stack_exchange_graph_data.helpers.progress"><code class="xref py py-mod docutils literal notranslate"><span class="pre">stack_exchange_graph_data.helpers.progress</span></code></a> module. Which is
+easily used in both <a class="reference internal" href="#stack_exchange_graph_data.helpers.curl.curl" title="stack_exchange_graph_data.helpers.curl.curl"><code class="xref py py-func docutils literal notranslate"><span class="pre">stack_exchange_graph_data.helpers.curl.curl()</span></code></a>
+and <a class="reference internal" href="stack_exchange_graph_data.html#stack_exchange_graph_data.driver.load_xml_stream" title="stack_exchange_graph_data.driver.load_xml_stream"><code class="xref py py-func docutils literal notranslate"><span class="pre">stack_exchange_graph_data.driver.load_xml_stream()</span></code></a>. Since
+it wraps a stream it’s easily transferable to any Python loop, and
+due to lacking business logic means there’s no monkey patching.</p></li>
+</ol>
+<div class="section" id="module-stack_exchange_graph_data.helpers.cache">
+<span id="cache"></span><h2>Cache<a class="headerlink" href="#module-stack_exchange_graph_data.helpers.cache" title="Permalink to this headline">¶</a></h2>
+<p>Simple file cache.</p>
+<p>Exposes two forms of cache:</p>
+<ol class="arabic simple">
+<li><p>A file that is downloaded from a website.</p></li>
+<li><p>A 7z archive cache - files that are extracted from a 7z archive.</p></li>
+</ol>
+<dl class="class">
+<dt id="stack_exchange_graph_data.helpers.cache.Archive7zCache">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.helpers.cache.</code><code class="sig-name descname">Archive7zCache</code><span class="sig-paren">(</span><em class="sig-param">cache_path: pathlib.Path</em>, <em class="sig-param">archive_cache: stack_exchange_graph_data.helpers.cache.CacheMethod</em><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.helpers.cache.Archive7zCache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exposes a cache that allows unzipping 7z archives.</p>
+<dl class="method">
+<dt id="stack_exchange_graph_data.helpers.cache.Archive7zCache.ensure">
+<code class="sig-name descname">ensure</code><span class="sig-paren">(</span><em class="sig-param">use_cache: bool = True</em><span class="sig-paren">)</span> &#x2192; pathlib.Path<a class="headerlink" href="#stack_exchange_graph_data.helpers.cache.Archive7zCache.ensure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure target file exists.</p>
+<p>Unzips the 7z archive showing the name and size of each file
+being extracted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>use_cache</strong> – Set to false to force reunarchiving of the data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Location of file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="stack_exchange_graph_data.helpers.cache.Cache">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.helpers.cache.</code><code class="sig-name descname">Cache</code><span class="sig-paren">(</span><em class="sig-param">cache_dir: pathlib.Path</em><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.helpers.cache.Cache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface to make cache instances.</p>
+<dl class="method">
+<dt id="stack_exchange_graph_data.helpers.cache.Cache.archive_7z">
+<code class="sig-name descname">archive_7z</code><span class="sig-paren">(</span><em class="sig-param">cache_path: pathlib.Path</em>, <em class="sig-param">archive_cache: stack_exchange_graph_data.helpers.cache.CacheMethod</em><span class="sig-paren">)</span> &#x2192; stack_exchange_graph_data.helpers.cache.Archive7zCache<a class="headerlink" href="#stack_exchange_graph_data.helpers.cache.Cache.archive_7z" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get an archive cache endpoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cache_path</strong> – Location of file relative to the cache directory.</p></li>
+<li><p><strong>archive_cache</strong> – A cache endpoint to get the 7z archive from.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>An archive cache endpoint.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.helpers.cache.Cache.file">
+<code class="sig-name descname">file</code><span class="sig-paren">(</span><em class="sig-param">cache_path: str</em>, <em class="sig-param">url: str</em><span class="sig-paren">)</span> &#x2192; stack_exchange_graph_data.helpers.cache.FileCache<a class="headerlink" href="#stack_exchange_graph_data.helpers.cache.Cache.file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a file cache endpoint.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cache_path</strong> – Location of file relative to the cache directory.</p></li>
+<li><p><strong>url</strong> – URL location of the file to download from if not cached.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A file cache endpoint.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="stack_exchange_graph_data.helpers.cache.CacheMethod">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.helpers.cache.</code><code class="sig-name descname">CacheMethod</code><span class="sig-paren">(</span><em class="sig-param">cache_path: pathlib.Path</em><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.helpers.cache.CacheMethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base cache object.</p>
+<dl class="method">
+<dt id="stack_exchange_graph_data.helpers.cache.CacheMethod._is_cached">
+<code class="sig-name descname">_is_cached</code><span class="sig-paren">(</span><em class="sig-param">use_cache: bool</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#stack_exchange_graph_data.helpers.cache.CacheMethod._is_cached" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the target exist in the cache.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>use_cache</strong> – Set to false to force redownload the data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if we should use the cache.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.helpers.cache.CacheMethod.ensure">
+<code class="sig-name descname">ensure</code><span class="sig-paren">(</span><em class="sig-param">use_cache: bool = True</em><span class="sig-paren">)</span> &#x2192; pathlib.Path<a class="headerlink" href="#stack_exchange_graph_data.helpers.cache.CacheMethod.ensure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure target file exists.</p>
+<p>This should be overwritten in child classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>use_cache</strong> – Set to false to force redownload the data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Location of file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="stack_exchange_graph_data.helpers.cache.FileCache">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.helpers.cache.</code><code class="sig-name descname">FileCache</code><span class="sig-paren">(</span><em class="sig-param">cache_path: pathlib.Path</em>, <em class="sig-param">url: str</em><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.helpers.cache.FileCache" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exposes a cache that allows downloading files.</p>
+<dl class="method">
+<dt id="stack_exchange_graph_data.helpers.cache.FileCache.ensure">
+<code class="sig-name descname">ensure</code><span class="sig-paren">(</span><em class="sig-param">use_cache: bool = True</em><span class="sig-paren">)</span> &#x2192; pathlib.Path<a class="headerlink" href="#stack_exchange_graph_data.helpers.cache.FileCache.ensure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure target file exists.</p>
+<p>This curls the file from the web to cache, providing a progress
+bar whilst downloading.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>use_cache</strong> – Set to false to force redownload the data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Location of file.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-stack_exchange_graph_data.helpers.coroutines">
+<span id="coroutines"></span><h2>Coroutines<a class="headerlink" href="#module-stack_exchange_graph_data.helpers.coroutines" title="Permalink to this headline">¶</a></h2>
+<p>Coroutine helpers.</p>
+<p>A lot of this module is based on the assumption that Python doesn’t
+seamlessly handle the destruction of coroutines when using multiplexing
+or broadcasting. It also helps ease interactions when coroutines enter
+closed states prematurely.</p>
+<dl class="class">
+<dt id="stack_exchange_graph_data.helpers.coroutines.CoroutineDelegator">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.helpers.coroutines.</code><code class="sig-name descname">CoroutineDelegator</code><a class="headerlink" href="#stack_exchange_graph_data.helpers.coroutines.CoroutineDelegator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Helper class for delegating to coroutines.</p>
+<dl class="method">
+<dt id="stack_exchange_graph_data.helpers.coroutines.CoroutineDelegator._increment_coroutine_refs">
+<code class="sig-name descname">_increment_coroutine_refs</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#stack_exchange_graph_data.helpers.coroutines.CoroutineDelegator._increment_coroutine_refs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increment the amount of sources for the coroutines.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.helpers.coroutines.CoroutineDelegator.run">
+<code class="sig-name descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[Iterator]<a class="headerlink" href="#stack_exchange_graph_data.helpers.coroutines.CoroutineDelegator.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send all data into the coroutine control flow.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>If a coroutine is closed prematurely the data that
+hasn’t been entered into the control flow will be
+returned. Otherwise an empty list is.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.helpers.coroutines.CoroutineDelegator.send_to">
+<code class="sig-name descname">send_to</code><span class="sig-paren">(</span><em class="sig-param">source: Union[Iterator, Iterable], target: Generator</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#stack_exchange_graph_data.helpers.coroutines.CoroutineDelegator.send_to" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add a source and target to send data to.</p>
+<p>This does not send any data into the target, to do that use the
+<a class="reference internal" href="#stack_exchange_graph_data.helpers.coroutines.CoroutineDelegator.run" title="stack_exchange_graph_data.helpers.coroutines.CoroutineDelegator.run"><code class="xref py py-meth docutils literal notranslate"><span class="pre">CoroutineDelegator.run()</span></code></a> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> – Input data, can be any iterable. Each is passed
+straight unaltered to target.</p></li>
+<li><p><strong>target</strong> – This is the coroutine the data enters into to get
+into the coroutine control flow.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.helpers.coroutines._is_magic_coroutine">
+<code class="sig-prename descclassname">stack_exchange_graph_data.helpers.coroutines.</code><code class="sig-name descname">_is_magic_coroutine</code><span class="sig-paren">(</span><em class="sig-param">target: Any</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#stack_exchange_graph_data.helpers.coroutines._is_magic_coroutine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if target is a magic coroutine.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>target</strong> – An object to check against.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If the object is a magic coroutine.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.helpers.coroutines.broadcast">
+<code class="sig-prename descclassname">stack_exchange_graph_data.helpers.coroutines.</code><code class="sig-name descname">broadcast</code><span class="sig-paren">(</span><em class="sig-param">*targets: Generator</em><span class="sig-paren">)</span> &#x2192; Generator<a class="headerlink" href="#stack_exchange_graph_data.helpers.coroutines.broadcast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Broadcast items to targets.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.helpers.coroutines.coroutine">
+<code class="sig-prename descclassname">stack_exchange_graph_data.helpers.coroutines.</code><code class="sig-name descname">coroutine</code><span class="sig-paren">(</span><em class="sig-param">function: Callable</em><span class="sig-paren">)</span> &#x2192; Callable<a class="headerlink" href="#stack_exchange_graph_data.helpers.coroutines.coroutine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wrap a coroutine generating function to make magic coroutines.</p>
+<p>A magic coroutine is wrapped in a protective coroutine that eases
+the destruction of coroutine pipelines. This is because the
+coroutine is wrapped in a ‘bubble’ that:</p>
+<ol class="arabic simple">
+<li><p>Primes the coroutine when the first element of data is passed to it.</p></li>
+<li><p>Sends information about the creation and destruction of other
+coroutines in the pipeline. This allows a coroutine to destroy
+itself when all providers have exited.</p></li>
+<li><p>Handles when a coroutine is being prematurely closed, if this is
+the case all target coroutines will be notified that some data
+sources are no longer available allowing them to deallocate
+themselves if needed.</p></li>
+<li><p>Handles situations where a target coroutine has been prematurely
+closed. In such a situation the current coroutine will be closed
+and exit with a StopIteration error, as if the coroutine has been
+closed with the <code class="code docutils literal notranslate"><span class="pre">.close</span></code>.</p></li>
+</ol>
+<p>It should be noted that these coroutine pipelines should be started via the
+<a class="reference internal" href="#stack_exchange_graph_data.helpers.coroutines.CoroutineDelegator" title="stack_exchange_graph_data.helpers.coroutines.CoroutineDelegator"><code class="xref py py-class docutils literal notranslate"><span class="pre">stack_exchange_graph_data.helpers.coroutines.CoroutineDelegator</span></code></a>.
+This is as it correctly initializes the entry coroutine, and handles
+when the coroutine has been prematurely closed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>function</strong> – Standard coroutine generator function.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Function that generates magic coroutines.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.helpers.coroutines.file_sink">
+<code class="sig-prename descclassname">stack_exchange_graph_data.helpers.coroutines.</code><code class="sig-name descname">file_sink</code><span class="sig-paren">(</span><em class="sig-param">*args: Any</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span> &#x2192; Generator<a class="headerlink" href="#stack_exchange_graph_data.helpers.coroutines.file_sink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send all data to a file.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.helpers.coroutines.primed_coroutine">
+<code class="sig-prename descclassname">stack_exchange_graph_data.helpers.coroutines.</code><code class="sig-name descname">primed_coroutine</code><span class="sig-paren">(</span><em class="sig-param">function: Callable[[...], Generator]</em><span class="sig-paren">)</span> &#x2192; Callable<a class="headerlink" href="#stack_exchange_graph_data.helpers.coroutines.primed_coroutine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Primes a coroutine at creation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>function</strong> – A coroutine function.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The coroutine function wrapped to prime the coroutine at creation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-stack_exchange_graph_data.helpers.curl">
+<span id="curl"></span><h2>Curl<a class="headerlink" href="#module-stack_exchange_graph_data.helpers.curl" title="Permalink to this headline">¶</a></h2>
+<p>Copy URL.</p>
+<dl class="function">
+<dt id="stack_exchange_graph_data.helpers.curl.curl">
+<code class="sig-prename descclassname">stack_exchange_graph_data.helpers.curl.</code><code class="sig-name descname">curl</code><span class="sig-paren">(</span><em class="sig-param">path: pathlib.Path</em>, <em class="sig-param">*args: Any</em>, <em class="sig-param">**kwargs: Any</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#stack_exchange_graph_data.helpers.curl.curl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download file to system.</p>
+<p>Provides a progress bar of the file being downloaded and some
+statistics around the file and download.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> – Local path to save the file to.</p></li>
+<li><p><strong>args&amp;kwargs</strong> – Passed to <code class="code docutils literal notranslate"><span class="pre">request.get</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-stack_exchange_graph_data.helpers.progress">
+<span id="progress"></span><h2>Progress<a class="headerlink" href="#module-stack_exchange_graph_data.helpers.progress" title="Permalink to this headline">¶</a></h2>
+<p>Display progress of a stream.</p>
+<dl class="class">
+<dt id="stack_exchange_graph_data.helpers.progress.BaseProgressStream">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.helpers.progress.</code><code class="sig-name descname">BaseProgressStream</code><span class="sig-paren">(</span><em class="sig-param">stream: Iterator[T], size: Optional[int], si: Callable[[int], Tuple[int, str]], progress: Callable[[T], int], width: int = 20, prefix: str = '', start: int = 0, message: Optional[str] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.helpers.progress.BaseProgressStream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display the progress of a stream.</p>
+<dl class="method">
+<dt id="stack_exchange_graph_data.helpers.progress.BaseProgressStream._get_progress">
+<code class="sig-name descname">_get_progress</code><span class="sig-paren">(</span><em class="sig-param">current: int</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#stack_exchange_graph_data.helpers.progress.BaseProgressStream._get_progress" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the progress of the stream.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>current</strong> – Current progress - not in percentage.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Progress bar and file size.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="stack_exchange_graph_data.helpers.progress.DataProgressStream">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.helpers.progress.</code><code class="sig-name descname">DataProgressStream</code><span class="sig-paren">(</span><em class="sig-param">stream: Iterator[T], size: Optional[int], width: int = 20, prefix: str = '', message: Optional[str] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.helpers.progress.DataProgressStream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display progress of a data stream.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="stack_exchange_graph_data.helpers.progress.ItemProgressStream">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.helpers.progress.</code><code class="sig-name descname">ItemProgressStream</code><span class="sig-paren">(</span><em class="sig-param">stream: Iterator[T], size: Optional[int], width: int = 20, prefix: str = '', message: Optional[str] = None</em><span class="sig-paren">)</span><a class="headerlink" href="#stack_exchange_graph_data.helpers.progress.ItemProgressStream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display progress of an item stream.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-stack_exchange_graph_data.helpers.si">
+<span id="si"></span><h2>SI<a class="headerlink" href="#module-stack_exchange_graph_data.helpers.si" title="Permalink to this headline">¶</a></h2>
+<p>Simplify a number to a wanted base.</p>
+<dl class="class">
+<dt id="stack_exchange_graph_data.helpers.si.Magnitude">
+<em class="property">class </em><code class="sig-prename descclassname">stack_exchange_graph_data.helpers.si.</code><code class="sig-name descname">Magnitude</code><a class="headerlink" href="#stack_exchange_graph_data.helpers.si.Magnitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>Magnitude conversions.</p>
+<dl class="method">
+<dt id="stack_exchange_graph_data.helpers.si.Magnitude.byte">
+<code class="sig-name descname">byte</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[int, str]<a class="headerlink" href="#stack_exchange_graph_data.helpers.si.Magnitude.byte" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a number to a truncated base form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> – Value to adjust.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Truncated value and unit.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.helpers.si.Magnitude.ibyte">
+<code class="sig-name descname">ibyte</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[int, str]<a class="headerlink" href="#stack_exchange_graph_data.helpers.si.Magnitude.ibyte" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a number to a truncated base form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> – Value to adjust.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Truncated value and unit.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="stack_exchange_graph_data.helpers.si.Magnitude.number">
+<code class="sig-name descname">number</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[int, str]<a class="headerlink" href="#stack_exchange_graph_data.helpers.si.Magnitude.number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a number to a truncated base form.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value</strong> – Value to adjust.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Truncated value and unit.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.helpers.si.display">
+<code class="sig-prename descclassname">stack_exchange_graph_data.helpers.si.</code><code class="sig-name descname">display</code><span class="sig-paren">(</span><em class="sig-param">values: Tuple[int, str], decimal_places: int = 2</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#stack_exchange_graph_data.helpers.si.display" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display a truncated number to a wanted DP.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>values</strong> – Value and unit to display.</p></li>
+<li><p><strong>decimal_places</strong> – Amount of decimal places to display the value to.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Right aligned display value.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.helpers.si.si_magnitude">
+<code class="sig-prename descclassname">stack_exchange_graph_data.helpers.si.</code><code class="sig-name descname">si_magnitude</code><span class="sig-paren">(</span><em class="sig-param">base: int</em>, <em class="sig-param">suffix: str</em>, <em class="sig-param">prefixes: str</em><span class="sig-paren">)</span> &#x2192; Callable[[int], Tuple[int, str]]<a class="headerlink" href="#stack_exchange_graph_data.helpers.si.si_magnitude" title="Permalink to this definition">¶</a></dt>
+<dd><p>SI base converter builder.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base</strong> – Base to truncate values to.</p></li>
+<li><p><strong>suffix</strong> – Suffix used to denote the type of information.</p></li>
+<li><p><strong>prefixes</strong> – Prefixes before the suffix to denote magnitude.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A function to change a value by the above parameters.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-stack_exchange_graph_data.helpers.xref">
+<span id="xref"></span><h2>XRef<a class="headerlink" href="#module-stack_exchange_graph_data.helpers.xref" title="Permalink to this headline">¶</a></h2>
+<p>Expand partial xrefs.</p>
+<dl class="function">
+<dt id="stack_exchange_graph_data.helpers.xref.custom_parser">
+<code class="sig-prename descclassname">stack_exchange_graph_data.helpers.xref.</code><code class="sig-name descname">custom_parser</code><span class="sig-paren">(</span><em class="sig-param">prefix: str</em><span class="sig-paren">)</span> &#x2192; Type[docutils.parsers.Parser]<a class="headerlink" href="#stack_exchange_graph_data.helpers.xref.custom_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Markdown parser with partial xref support.</p>
+<p>Extends <code class="code docutils literal notranslate"><span class="pre">recommonmark.parser.CommonMarkParser</span></code> with to include
+the <code class="code docutils literal notranslate"><span class="pre">custom_parser.PendingXRefTransform</span></code> transform.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>prefix</strong> – Http base to prepend to partial hyperlinks.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A custom parser to parse Markdown.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Stack Exchange Graph Data</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="stack_exchange_graph_data.html">SE Graph Data</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="stack_exchange_graph_data.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="coroutines.html">Coroutines</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Helpers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="segd.html">SEGD</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="stack_exchange_graph_data.html#module-stack_exchange_graph_data.__main__">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stack_exchange_graph_data.html#module-stack_exchange_graph_data.cli">CLI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stack_exchange_graph_data.html#driver">Driver</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="stack_exchange_graph_data.html">SE Graph Data</a><ul>
+      <li>Previous: <a href="coroutines.html" title="previous chapter">Coroutines</a></li>
+      <li>Next: <a href="segd.html" title="next chapter">SEGD</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Peilonrayz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/docs/helpers.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

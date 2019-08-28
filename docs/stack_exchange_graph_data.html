@@ -1,0 +1,400 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>SE Graph Data &#8212; Stack Exchange Graph Data  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Coroutines" href="coroutines.html" />
+    <link rel="prev" title="Welcome to Stack Exchange Graph Data’s documentation!" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-stack_exchange_graph_data">
+<span id="se-graph-data"></span><h1>SE Graph Data<a class="headerlink" href="#module-stack_exchange_graph_data" title="Permalink to this headline">¶</a></h1>
+<p>Extract data from Stack Exchange archives for analysis.</p>
+<p>Stack Exchange Graph Data generates the data needed to plot graphs in
+<a class="reference external" href="https://gephi.org/">Gephi</a> to analise how interconnected posts are.
+The aim is to find questions that require tags, or that should have
+additional references. Improving the latter will improve the ability to
+find the former.</p>
+<p>Currently with most meta posts being in graphs of 10 or less it shows to
+me that we need more references between our meta posts.</p>
+<p>SEGD is a bit overkill in what it does and so here’s a short rundown on
+what it does:</p>
+<ol class="arabic">
+<li><p>Download all site metadata from the
+<a class="reference external" href="https://archive.org/download/stackexchange/">archive</a>.</p></li>
+<li><p>Download the data for the site that we have filtered to get.</p></li>
+<li><p>Extract the data from the 7z archive we got in (2).</p></li>
+<li><p>Extract all links between posts on that site. If you download main
+site data then it will only find the connections between posts on
+main. Where if a meta site is specified then it will limit it to meta.</p>
+<p>It extracts comments from posts and comments giving them different
+weightings on the exported data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Q&amp;A</dt>
+<dd class="field-odd"><ol class="arabic simple" start="3">
+<li><p>Questions have the highest weighting at 3. This is because
+an answer directly relates to the question.</p></li>
+</ol>
+</dd>
+<dt class="field-even">Post Link</dt>
+<dd class="field-even"><ol class="arabic simple" start="2">
+<li><p>Post links have the second highest weight as they provide
+evidence from other meta posts. It doesn’t have the same weight
+as Q&amp;As as the post may be incorrect or discouraged. And so
+whilst the links are still valid, they should be taken with a
+grain of salt.</p></li>
+</ol>
+</dd>
+<dt class="field-odd">Comment Links</dt>
+<dd class="field-odd"><ol class="arabic simple">
+<li><p>Comment links have the lowest weight as whilst they are
+normally used to provide links to similar post, sometimes
+they’re used for humor or other things that may reduce the
+validity of the connection with regard to what SEGD is try
+to achieve.</p></li>
+</ol>
+</dd>
+</dl>
+</li>
+<li><p>Once all the links have been accumulated, they are exported to the
+output file for use in Gephi.</p></li>
+<li><p>We extract the tag information from each post so that we can observe
+the connections of each tag in the graph.</p></li>
+<li><p>All node data is extracted to a separate output file.</p></li>
+</ol>
+<p>Below shows how SEGD interacts with all the different modules and
+packages within it. The different colours show which package they’re in.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Black</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#module-stack_exchange_graph_data" title="stack_exchange_graph_data"><code class="xref py py-mod docutils literal notranslate"><span class="pre">stack_exchange_graph_data</span></code></a></p>
+</dd>
+<dt class="field-even">Green</dt>
+<dd class="field-even"><p><a class="reference internal" href="coroutines.html#module-stack_exchange_graph_data.coroutines" title="stack_exchange_graph_data.coroutines"><code class="xref py py-mod docutils literal notranslate"><span class="pre">stack_exchange_graph_data.coroutines</span></code></a></p>
+</dd>
+<dt class="field-odd">Yellow</dt>
+<dd class="field-odd"><p><a class="reference internal" href="helpers.html#module-stack_exchange_graph_data.helpers" title="stack_exchange_graph_data.helpers"><code class="xref py py-mod docutils literal notranslate"><span class="pre">stack_exchange_graph_data.helpers</span></code></a></p>
+</dd>
+<dt class="field-even">Blue</dt>
+<dd class="field-even"><p><a class="reference internal" href="segd.html#module-stack_exchange_graph_data.segd" title="stack_exchange_graph_data.segd"><code class="xref py py-mod docutils literal notranslate"><span class="pre">stack_exchange_graph_data.segd</span></code></a></p>
+</dd>
+</dl>
+<div class="graphviz"><img src="../_images/graphviz-abdeda619032c8151819631402fbf3bd05e04391.png" alt="digraph G {
+    rankdir=LR;
+    &quot;__main__&quot;;
+    cli;
+    driver;
+
+    node [color=&quot;#05930C&quot;];
+        data_sources;
+        links;
+        nodes;
+
+    node [color=&quot;#FFE050&quot;];
+        h_cache [label=&quot;helpers.cache&quot;];
+        coroutines;
+        curl;
+        progress;
+        si;
+        xref;
+
+    node [color=&quot;#0074C1&quot;];
+        s_cache [label=&quot;segd.cache&quot;];
+        file_system;
+        &quot;graph&quot;;
+        models;
+        site_info;
+
+
+    &quot;__main__&quot; -&gt; {cli, driver};
+    driver -&gt; {
+      data_sources,
+      links,
+      nodes,
+      file_system,
+      site_info,
+      coroutines,
+      progress
+    };
+
+    data_sources -&gt; {models, &quot;graph&quot;, xref, coroutines};
+    links -&gt; {&quot;graph&quot;, coroutines};
+    nodes -&gt; coroutines;
+
+    s_cache -&gt; {site_info, h_cache};
+    file_system -&gt; {s_cache, site_info};
+
+    h_cache -&gt; {curl, si};
+    curl -&gt; progress;
+    progress -&gt; si;
+}" class="graphviz" /></div>
+<p>As can be seen the program is somewhat split. Half the libraries are
+only involved in the iterator side of the program, where the other half
+are only involved in the coroutine side of the program.</p>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<p class="caption"><span class="caption-text">submodules:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="coroutines.html">Coroutines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="coroutines.html#module-stack_exchange_graph_data.coroutines.data_sources">Data Sources</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coroutines.html#module-stack_exchange_graph_data.coroutines.links">Links</a></li>
+<li class="toctree-l2"><a class="reference internal" href="coroutines.html#module-stack_exchange_graph_data.coroutines.nodes">Nodes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="helpers.html">Helpers</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html#module-stack_exchange_graph_data.helpers.cache">Cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html#module-stack_exchange_graph_data.helpers.coroutines">Coroutines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html#module-stack_exchange_graph_data.helpers.curl">Curl</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html#module-stack_exchange_graph_data.helpers.progress">Progress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html#module-stack_exchange_graph_data.helpers.si">SI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="helpers.html#module-stack_exchange_graph_data.helpers.xref">XRef</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="segd.html">SEGD</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="segd.html#module-stack_exchange_graph_data.segd.cache">Cache</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segd.html#module-stack_exchange_graph_data.segd.file_system">File System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segd.html#module-stack_exchange_graph_data.segd.graph">Graph</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segd.html#module-stack_exchange_graph_data.segd.models">Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="segd.html#module-stack_exchange_graph_data.segd.site_info">Site Information</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="module-stack_exchange_graph_data.__main__">
+<span id="main"></span><h2>Main<a class="headerlink" href="#module-stack_exchange_graph_data.__main__" title="Permalink to this headline">¶</a></h2>
+<p>Extract links form SE data dumps.</p>
+<p>SEGD exposes a commandline interface to change the functionality of the
+program. These can be seen by using the <code class="code docutils literal notranslate"><span class="pre">--help</span></code> flag or in the
+<a class="reference internal" href="#cli">CLI</a> section.</p>
+<dl class="function">
+<dt id="stack_exchange_graph_data.__main__.main">
+<code class="sig-prename descclassname">stack_exchange_graph_data.__main__.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#stack_exchange_graph_data.__main__.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run the program from the CLI interface.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-stack_exchange_graph_data.cli">
+<span id="cli"></span><h2>CLI<a class="headerlink" href="#module-stack_exchange_graph_data.cli" title="Permalink to this headline">¶</a></h2>
+<p>Argument parser functions.</p>
+<p>The exposed arguments are:</p>
+<dl class="option-list">
+<dt><kbd><span class="option">--help</span></kbd></dt>
+<dd><p>show this help message and exit</p>
+</dd>
+<dt><kbd><span class="option">--no-expand-meta</span></kbd></dt>
+<dd><p>don’t include links that use the old domain name
+structure</p>
+</dd>
+<dt><kbd><span class="option">--download</span></kbd></dt>
+<dd><p>redownload data, even if it exists in the cache</p>
+</dd>
+<dt><kbd><span class="option">--min <var>MIN</var></span></kbd></dt>
+<dd><p>minimum sized networks to include in output</p>
+</dd>
+<dt><kbd><span class="option">--max <var>MAX</var></span></kbd></dt>
+<dd><p>maximum sized networks to include in output</p>
+</dd>
+<dt><kbd><span class="option">--output <var>OUTPUT</var></span></kbd></dt>
+<dd><p>output file name</p>
+</dd>
+<dt><kbd><span class="option">--cache-dir <var>CACHE_DIR</var></span></kbd></dt>
+<dd><p>cache directory</p>
+</dd>
+</dl>
+<dl class="function">
+<dt id="stack_exchange_graph_data.cli.make_parser">
+<code class="sig-prename descclassname">stack_exchange_graph_data.cli.</code><code class="sig-name descname">make_parser</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; argparse.ArgumentParser<a class="headerlink" href="#stack_exchange_graph_data.cli.make_parser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make parser for CLI arguments.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="driver">
+<span id="id1"></span><h2>Driver<a class="headerlink" href="#driver" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-stack_exchange_graph_data.driver"></span><p>Connect and run the control flow of the program.</p>
+<p>Since all the coroutines wrapped with
+<a class="reference internal" href="helpers.html#stack_exchange_graph_data.helpers.coroutines.coroutine" title="stack_exchange_graph_data.helpers.coroutines.coroutine"><code class="xref py py-func docutils literal notranslate"><span class="pre">stack_exchange_graph_data.helpers.coroutines.coroutine()</span></code></a> are stand
+alone coroutines. Which require the target coroutine to be passed at
+creation time. This means that when we want to interact with them we
+need to create the entire control flow, which we do here.</p>
+<p>The entire control flow of the coroutines is:</p>
+<div class="graphviz"><img src="../_images/graphviz-f018d183670c192013b3b7461c4fe625c845cc67.png" alt="digraph G {
+    file_sink_l [label=&quot;file_sink&quot;];
+    file_sink_n [label=&quot;file_sink&quot;];
+
+    subgraph cluster_0 {
+        label=&quot;links_driver&quot;;
+        color=&quot;#0074C1&quot;;
+
+        node [color=&quot;#0074C1&quot;];
+            handle_links;
+            filter_links;
+            filter_duplicates;
+            filter_network_size;
+            sheet_prep;
+
+        sheet_prep -&gt; file_sink_l;
+    }
+
+    subgraph cluster_1 {
+        label=&quot;nodes_driver&quot;;
+        color=&quot;#FFE050&quot;;
+
+        node [color=&quot;#FFE050&quot;];
+            handle_nodes;
+
+        handle_nodes -&gt; file_sink_n;
+    }
+
+    subgraph cluster_2 {
+        label=&quot;navigate&quot;;
+        color=&quot;#05930C&quot;;
+
+        node [color=&quot;#05930C&quot;];
+            load_posts;
+            get_post_links;
+            load_comments;
+            get_comment_links;
+    }
+
+    handle_links -&gt; filter_links -&gt; filter_duplicates
+        -&gt; filter_network_size -&gt; sheet_prep;
+    handle_links -&gt; filter_duplicates;
+
+    load_posts -&gt; get_post_links -&gt; {handle_links, handle_nodes};
+    load_comments -&gt; get_comment_links -&gt; handle_links;
+}" class="graphviz" /></div>
+<dl class="function">
+<dt id="stack_exchange_graph_data.driver.links_driver">
+<code class="sig-prename descclassname">stack_exchange_graph_data.driver.</code><code class="sig-name descname">links_driver</code><span class="sig-paren">(</span><em class="sig-param">arguments: argparse.Namespace</em>, <em class="sig-param">_site_info: stack_exchange_graph_data.segd.site_info.SiteInfo</em><span class="sig-paren">)</span> &#x2192; Generator<a class="headerlink" href="#stack_exchange_graph_data.driver.links_driver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the control flow for links.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.driver.load_xml_stream">
+<code class="sig-prename descclassname">stack_exchange_graph_data.driver.</code><code class="sig-name descname">load_xml_stream</code><span class="sig-paren">(</span><em class="sig-param">file_path: pathlib.Path</em>, <em class="sig-param">progress_message: Optional[str] = None</em><span class="sig-paren">)</span> &#x2192; stack_exchange_graph_data.helpers.progress.ItemProgressStream<a class="headerlink" href="#stack_exchange_graph_data.driver.load_xml_stream" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load an iterable xml file with a progress bar.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.driver.navigate">
+<code class="sig-prename descclassname">stack_exchange_graph_data.driver.</code><code class="sig-name descname">navigate</code><span class="sig-paren">(</span><em class="sig-param">_file_system: stack_exchange_graph_data.segd.file_system.FileSystem</em>, <em class="sig-param">arguments: argparse.Namespace</em><span class="sig-paren">)</span> &#x2192; None<a class="headerlink" href="#stack_exchange_graph_data.driver.navigate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build and navigate the coroutine control flow.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="stack_exchange_graph_data.driver.nodes_driver">
+<code class="sig-prename descclassname">stack_exchange_graph_data.driver.</code><code class="sig-name descname">nodes_driver</code><span class="sig-paren">(</span><em class="sig-param">arguments: argparse.Namespace</em><span class="sig-paren">)</span> &#x2192; Generator<a class="headerlink" href="#stack_exchange_graph_data.driver.nodes_driver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build the control flow for nodes.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Stack Exchange Graph Data</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SE Graph Data</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="coroutines.html">Coroutines</a></li>
+<li class="toctree-l3"><a class="reference internal" href="helpers.html">Helpers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="segd.html">SEGD</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-stack_exchange_graph_data.__main__">Main</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-stack_exchange_graph_data.cli">CLI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#driver">Driver</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Welcome to Stack Exchange Graph Data’s documentation!</a></li>
+      <li>Next: <a href="coroutines.html" title="next chapter">Coroutines</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Peilonrayz.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/docs/stack_exchange_graph_data.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
