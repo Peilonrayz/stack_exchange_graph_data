@@ -2,6 +2,9 @@
 .cache/
 .mam/
 .mypy_cache/
+.coverage
+.vscode/
+output/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
