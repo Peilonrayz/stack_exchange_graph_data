@@ -1,9 +1,9 @@
 # Peilon's extras
 .cache/
-.mam/
 .mypy_cache/
 .coverage
 .vscode/
+.nox/
 output/
 
 # Byte-compiled / optimized / DLL files

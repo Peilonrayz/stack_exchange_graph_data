@@ -1,32 +1,28 @@
 #!/usr/bin/env python
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
-with open('README.md', 'r') as f:
-    long_description = f.read()
+with open("README.rst") as f:
+    LONG_DESCRIPTION = f.read()
 
 setup(
-    name='stack_exchange_graph_data',
-    version='0.0.1',
-    license='MIT',
-    description='Converts Stack Exchange data dumps to Gephi importable '
-                'spreadsheets.',
-    long_description=long_description,
-    long_description_content_type="text/markdown",
-    author='Peilonrayz',
-    author_email='peilonrayz@gmail.com',
-    url='https://example.com/',
-    packages=find_packages('src'),
-    package_dir={'': 'src'},
+    name="stack_exchange_graph_data",
+    version="0.0.1",
+    license="MIT",
+    description="Converts Stack Exchange data dumps to Gephi importable spreadsheets.",
+    long_description=LONG_DESCRIPTION,
+    long_description_content_type="text/x-rst",
+    author="Peilonrayz",
+    author_email="peilonrayz@gmail.com",
+    url="https://peilonrayz.github.io/stack_exchange_graph_data",
+    project_urls={
+        "Bug Tracker": "https://github.com/Peilonrayz/stack_exchange_graph_data/issues",
+        "Documentation": "https://peilonrayz.github.io/stack_exchange_graph_data",
+        "Source Code": "https://github.com/Peilonrayz/stack_exchange_graph_data",
+    },
+    packages=find_packages("src"),
+    package_dir={"": "src"},
     include_package_data=True,
     zip_safe=False,
-    keywords='stackexchange sede',
-    classifiers=[
-        'Development Status :: 3 - Alpha',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Operating System :: OS Independent',
-        'Programming Language :: Python :: 3.7',
-    ],
     install_requires=[
         'docutils',
         'recommonmark',
@@ -36,15 +32,18 @@ setup(
         'requests',
         'pylzma',
     ],
-    extras_require={
-        'dev':  [
-            'tox',
-            'docutils-stubs',
-        ]
-    },
-    entry_points={
-        "console_scripts": [
-            "segd=stack_exchange_graph_data.__main__:main"
-        ]
-    },
+    classifiers=[
+        "Development Status :: 3 - Alpha",
+        "Environment :: Console",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+    ],
+    keywords="stackexchange sede",
+    entry_points={"console_scripts": ["segd=stack_exchange_graph_data.__main__:main"]},
 )
