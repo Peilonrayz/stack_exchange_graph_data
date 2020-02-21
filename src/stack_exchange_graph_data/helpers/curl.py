@@ -10,11 +10,7 @@ import requests
 from . import progress
 
 
-def curl(
-    path: pathlib.Path,
-    *args: Any,
-    **kwargs: Any,
-) -> None:
+def curl(path: pathlib.Path, *args: Any, **kwargs: Any,) -> None:
     """
     Download file to system.
 
@@ -26,17 +22,15 @@ def curl(
     """
     response = requests.get(*args, stream=True, **kwargs)
     response.raise_for_status()
-    length_ = response.headers.get('content-length')
+    length_ = response.headers.get("content-length")
     length = int(length_) if length_ else None
     path.parent.mkdir(parents=True, exist_ok=True)
 
-    print(f'Downloading: {response.url}')
+    print(f"Downloading: {response.url}")
     try:
-        with path.open('wb') as output:
+        with path.open("wb") as output:
             for chunk in progress.DataProgressStream(
-                response.iter_content(chunk_size=512),
-                length,
-                prefix='  ',
+                response.iter_content(chunk_size=512), length, prefix="  ",
             ):
                 output.write(chunk)
     except BaseException:

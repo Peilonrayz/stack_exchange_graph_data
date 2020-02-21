@@ -1,7 +1,7 @@
 """Holds the driving segments of the program."""
 
 import pathlib
-from typing import Any, IO
+from typing import IO, Any
 
 from defusedxml import ElementTree
 
@@ -22,12 +22,10 @@ class FileSystem:
         :param use_cache: Set to false to force redownload of data.
         :return: The :code:`Sites.xml` file in binary read mode.
         """
-        return self.cache.sites.ensure(use_cache).open('rb')
+        return self.cache.sites.ensure(use_cache).open("rb")
 
     def get_site_archive(
-        self,
-        site: site_info.SiteInfo,
-        use_cache: bool = True,
+        self, site: site_info.SiteInfo, use_cache: bool = True,
     ) -> pathlib.Path:
         """
         Ensure the site's 7z archive is in cache.
@@ -39,10 +37,7 @@ class FileSystem:
         return self.cache.site_archive(site).ensure(use_cache)
 
     def get_site_file(
-        self,
-        site: site_info.SiteInfo,
-        file_path: str,
-        use_cache: bool = True,
+        self, site: site_info.SiteInfo, file_path: str, use_cache: bool = True,
     ) -> pathlib.Path:
         """
         Get a data file from the site's data dump.
@@ -65,15 +60,13 @@ class FileSystem:
             for site in ElementTree.parse(sites_path).getroot():
                 if any(
                     site_name == site.attrib[attr].lower()
-                    for attr in ['TinyName', 'Name', 'LongName']
+                    for attr in ["TinyName", "Name", "LongName"]
                 ):
                     return site
-        raise ValueError(f'No site named {site_name}.')
+        raise ValueError(f"No site named {site_name}.")
 
     def get_site_info(
-        self,
-        site_name: str,
-        use_cache: bool = True,
+        self, site_name: str, use_cache: bool = True,
     ) -> site_info.SiteInfo:
         """
         Get site information for the provided site.
@@ -83,4 +76,4 @@ class FileSystem:
         :return: Object containing site information.
         """
         _site_info = self._get_site_info(site_name, use_cache)
-        return site_info.SiteInfo(_site_info.attrib['Url'])
+        return site_info.SiteInfo(_site_info.attrib["Url"])

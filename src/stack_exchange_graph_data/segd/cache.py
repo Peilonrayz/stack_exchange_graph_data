@@ -2,8 +2,8 @@
 
 import pathlib
 
-from . import site_info
 from ..helpers import cache
+from . import site_info
 
 
 class Cache:
@@ -23,7 +23,7 @@ class Cache:
         short hand name to get the required site domain. It also allows
         us to easily see if the site requested even exists.
         """
-        return self.cache.file('Sites.xml', self.archive + 'Sites.xml')
+        return self.cache.file("Sites.xml", self.archive + "Sites.xml")
 
     def site_archive(self, site: site_info.SiteInfo) -> cache.FileCache:
         """
@@ -31,15 +31,10 @@ class Cache:
 
         :param site: The site info object of the wanted archive.
         """
-        return self.cache.file(
-            f'{site.domain}.7z',
-            self.archive + f'{site.domain}.7z',
-        )
+        return self.cache.file(f"{site.domain}.7z", self.archive + f"{site.domain}.7z",)
 
     def site_file(
-        self,
-        site: site_info.SiteInfo,
-        file_path: str,
+        self, site: site_info.SiteInfo, file_path: str,
     ) -> cache.Archive7zCache:
         """
         Endpoint for the site's unarchived data.
@@ -51,6 +46,5 @@ class Cache:
         :param file_path: The unarchived file wanted - :code:`Comments.xml`.
         """
         return self.cache.archive_7z(
-            pathlib.Path(site.name, file_path),
-            self.site_archive(site),
+            pathlib.Path(site.name, file_path), self.site_archive(site),
         )

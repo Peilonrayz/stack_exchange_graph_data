@@ -28,15 +28,15 @@ def filter_links(domains: Set[str], target: Generator) -> Generator:
         if url.netloc not in domains:
             continue
 
-        segments: List[str] = url.path.split('/')
+        segments: List[str] = url.path.split("/")
         list_ = segments[1] if len(segments) >= 2 else None
-        post_id = segments[2] if len(segments) >= 3 else ''
-        if list_ not in {'questions', 'a', 'q'}:
+        post_id = segments[2] if len(segments) >= 3 else ""
+        if list_ not in {"questions", "a", "q"}:
             continue
 
         if url.query:
             try:
-                _, post_id = url.query.split('_', 1)
+                _, post_id = url.query.split("_", 1)
                 int(post_id)
             except ValueError:
                 pass
@@ -60,18 +60,13 @@ def filter_duplicates(target: Generator) -> Generator:
     finally:
         for from_node, links_to in link_lookup.items():
             for to_node, types in links_to.items():
-                target.send((
-                    from_node,
-                    to_node,
-                    max(types, key=lambda i: i.value.weight),
-                ))
+                target.send(
+                    (from_node, to_node, max(types, key=lambda i: i.value.weight),)
+                )
 
 
 @coroutine
-def filter_network_size(
-        arguments: argparse.Namespace,
-        target: Generator,
-) -> Generator:
+def filter_network_size(arguments: argparse.Namespace, target: Generator,) -> Generator:
     """
     Filter networks that aren't the wanted size.
 
@@ -89,18 +84,20 @@ def filter_network_size(
             for node in network:
                 for link in node.links:
                     edge_type = link.type.value
-                    target.send((
-                        node.value,
-                        link.target.value,
-                        edge_type.weight,
-                        edge_type.type,
-                    ))
+                    target.send(
+                        (
+                            node.value,
+                            link.target.value,
+                            edge_type.weight,
+                            edge_type.type,
+                        )
+                    )
 
 
 @coroutine
 def sheet_prep(target: Generator) -> Generator:
     """Convert into the format required to be sent to disk."""
-    target.send('Source;Target;Weight;Type\n')
+    target.send("Source;Target;Weight;Type\n")
     while True:
         edge = yield
-        target.send(';'.join(map(str, edge)) + '\n')
+        target.send(";".join(map(str, edge)) + "\n")

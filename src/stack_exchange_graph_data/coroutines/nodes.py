@@ -14,20 +14,14 @@ def handle_nodes(target: Generator) -> Generator:
         while True:
             nodes.append((yield))
     finally:
-        tags = collections.Counter(
-            tag
-            for node in nodes
-            for tag in node.tags or []
-        )
+        tags = collections.Counter(tag for node in nodes for tag in node.tags or [])
         top_tags = [t for t, _ in tags.most_common(36)]
-        target.send(';'.join(['Id'] + top_tags) + '\n')
+        target.send(";".join(["Id"] + top_tags) + "\n")
         for node in nodes:
             target.send(
-                ';'.join(
+                ";".join(
                     [str(node.id)]
-                    + [
-                        str(tag in (node.tags or []))
-                        for tag in top_tags
-                    ],
-                ) + '\n',
+                    + [str(tag in (node.tags or [])) for tag in top_tags],
+                )
+                + "\n",
             )

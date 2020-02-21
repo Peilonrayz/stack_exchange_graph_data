@@ -11,7 +11,15 @@ import functools
 import itertools
 import types
 from typing import (
-    Any, Callable, Generator, Iterable, Iterator, List, Optional, Tuple, Union,
+    Any,
+    Callable,
+    Generator,
+    Iterable,
+    Iterator,
+    List,
+    Optional,
+    Tuple,
+    Union,
 )
 
 NEW_SOURCE = object()
@@ -29,11 +37,7 @@ class CoroutineDelegator:
         """Initialize CoroutineDelegator."""
         self._queue = []
 
-    def send_to(
-        self,
-        source: IIter,
-        target: Generator,
-    ) -> None:
+    def send_to(self, source: IIter, target: Generator,) -> None:
         """
         Add a source and target to send data to.
 
@@ -78,9 +82,7 @@ class CoroutineDelegator:
         """
         self._increment_coroutine_refs()
 
-        output: List[Optional[Iterator]] = [
-            None for _ in range(len(self._queue))
-        ]
+        output: List[Optional[Iterator]] = [None for _ in range(len(self._queue))]
         for i, (source, target) in enumerate(self._queue):
             output[i] = self._run(source, target)
         self._queue = []
@@ -115,8 +117,7 @@ def _is_magic_coroutine(target: Any) -> bool:
     """
     try:
         return bool(
-            target
-            and target.__qualname__.endswith('coroutine.<locals>.magic'),
+            target and target.__qualname__.endswith("coroutine.<locals>.magic"),
         )
     except Exception:
         return False
@@ -157,11 +158,7 @@ def coroutine(function: Callable) -> Callable:
     def magic(*args: Any, **kwargs: Any) -> Generator:
         # Get magic coroutine targets
         targets_ = itertools.chain(args, kwargs.values())
-        targets = [
-            t
-            for t in targets_
-            if _is_magic_coroutine(t)
-        ]
+        targets = [t for t in targets_ if _is_magic_coroutine(t)]
 
         # Create wrapped coroutine
         wrapped = function(*args, **kwargs)

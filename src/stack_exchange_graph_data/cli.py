@@ -20,41 +20,35 @@ def make_parser() -> argparse.ArgumentParser:
     """Make parser for CLI arguments."""
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'site_name',
-        help='name of the site you want to get data for',
+        "site_name", help="name of the site you want to get data for",
     )
     parser.add_argument(
-        '--no-expand-meta',
-        action='store_true',
+        "--no-expand-meta",
+        action="store_true",
         help="don't include links that use the old domain name structure",
     )
     parser.add_argument(
-        '-d',
-        '--download',
-        action='store_true',
-        help='redownload data, even if it exists in the cache',
+        "-d",
+        "--download",
+        action="store_true",
+        help="redownload data, even if it exists in the cache",
     )
     parser.add_argument(
-        '--min',
+        "--min",
         type=int,
         default=0,
-        help='minimum sized networks to include in output',
+        help="minimum sized networks to include in output",
     )
     parser.add_argument(
-        '--max',
+        "--max",
         type=int,
-        default=float('inf'),
-        help='maximum sized networks to include in output',
+        default=float("inf"),
+        help="maximum sized networks to include in output",
     )
     parser.add_argument(
-        '-o',
-        '--output',
-        default='{site_name}',
-        help='output file name',
+        "-o", "--output", default="{site_name}", help="output file name",
     )
     parser.add_argument(
-        '--cache-dir',
-        default='.cache/',
-        help='cache directory',
+        "--cache-dir", default=".cache/", help="cache directory",
     )
     return parser

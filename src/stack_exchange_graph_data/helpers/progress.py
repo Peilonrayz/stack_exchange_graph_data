@@ -7,7 +7,7 @@ from typing import Callable, Generic, Iterator, Optional, Tuple, TypeVar
 from .si import Magnitude, display
 
 # nosa(1): pylint[:Class name "T" doesn't conform to PascalCase naming style]
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 # nosa(1): pylint[:Too many instance attributes]
@@ -22,7 +22,7 @@ class BaseProgressStream(Generic[T]):
         si: Callable[[int], Tuple[int, str]],
         progress: Callable[[T], int],
         width: int = 20,
-        prefix: str = '',
+        prefix: str = "",
         start: int = 0,
         message: Optional[str] = None,
     ):
@@ -30,7 +30,7 @@ class BaseProgressStream(Generic[T]):
         self.stream = stream
         self.size = size
         self.width = width
-        self.progress_bar = '=' * (width - 1) + '>'
+        self.progress_bar = "=" * (width - 1) + ">"
         self.prefix = prefix
         self.to_readable = si
         self.progress_fn = progress
@@ -45,11 +45,11 @@ class BaseProgressStream(Generic[T]):
         :return: Progress bar and file size.
         """
         if not self.size:
-            return ''
+            return ""
         amount = self.width * current // self.size
-        progress = self.progress_bar[-amount:] if amount else ''
+        progress = self.progress_bar[-amount:] if amount else ""
         disp_size = display(self.to_readable(self.size))
-        return f'[{progress:<{self.width}}] {disp_size} '
+        return f"[{progress:<{self.width}}] {disp_size} "
 
     def __iter__(self) -> Iterator[T]:
         """
@@ -72,18 +72,13 @@ class BaseProgressStream(Generic[T]):
                 rate = current // max(int(time.clock() - start), 1)
                 disp_rate = display(self.to_readable(rate))
                 print(
-                    f'\r{self.prefix}{progress}{disp_rate}/s',
-                    end='',
-                    flush=True,
+                    f"\r{self.prefix}{progress}{disp_rate}/s", end="", flush=True,
                 )
                 yield chunk
             print()
         for warning in warnings_:
             warnings.showwarning(
-                warning.message,
-                warning.category,
-                warning.filename,
-                warning.lineno,
+                warning.message, warning.category, warning.filename, warning.lineno,
             )
 
 
@@ -95,19 +90,12 @@ class DataProgressStream(BaseProgressStream[T]):
         stream: Iterator[T],
         size: Optional[int],
         width: int = 20,
-        prefix: str = '',
+        prefix: str = "",
         message: Optional[str] = None,
     ):
         """Initialize DataProgressStream."""
         super().__init__(
-            stream,
-            size,
-            Magnitude.ibyte,
-            len,
-            width,
-            prefix,
-            0,
-            message,
+            stream, size, Magnitude.ibyte, len, width, prefix, 0, message,
         )
 
 
@@ -119,17 +107,10 @@ class ItemProgressStream(BaseProgressStream[T]):
         stream: Iterator[T],
         size: Optional[int],
         width: int = 20,
-        prefix: str = '',
+        prefix: str = "",
         message: Optional[str] = None,
     ):
         """Initialize ItemProgressStream."""
         super().__init__(
-            stream,
-            size,
-            Magnitude.number,
-            lambda _: 1,
-            width,
-            prefix,
-            1,
-            message,
+            stream, size, Magnitude.number, lambda _: 1, width, prefix, 1, message,
         )

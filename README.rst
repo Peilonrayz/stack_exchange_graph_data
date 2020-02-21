@@ -1,4 +1,4 @@
-stack_exchange_graph_data
+Stack Exchange Graph Data
 =========================
 
 .. image:: https://travis-ci.com/Peilonrayz/stack_exchange_graph_data.svg?branch=master
@@ -37,4 +37,4 @@ To run all tests run ``nox``. No venv is needed; nox makes all of them for us.
 License
 -------
 
-stack_exchange_graph_data is available under the MIT license.
+Stack Exchange Graph Data is available under the MIT license.

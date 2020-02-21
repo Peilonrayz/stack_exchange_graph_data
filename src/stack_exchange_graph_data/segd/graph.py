@@ -6,20 +6,20 @@ import enum
 from typing import Dict, List, Set
 
 __all__ = [
-    'LinkType',
-    'Node',
-    'find_graph_nodes',
+    "LinkType",
+    "Node",
+    "find_graph_nodes",
 ]
 
-LinkValue = collections.namedtuple('LinkValue', 'name weight type')
+LinkValue = collections.namedtuple("LinkValue", "name weight type")
 
 
 class LinkType(enum.Enum):
     """Graph link types."""
 
-    QAA = LinkValue('Question & Answer', 3, 'Directed')
-    PL = LinkValue('Post Link', 2, 'Directed')
-    CL = LinkValue('Comment Link', 1, 'Directed')
+    QAA = LinkValue("Question & Answer", 3, "Directed")
+    PL = LinkValue("Post Link", 2, "Directed")
+    CL = LinkValue("Comment Link", 1, "Directed")
 
 
 @dataclasses.dataclass
@@ -27,8 +27,8 @@ class Node:
     """Graph Node."""
 
     value: int
-    links: 'List[Edge]'
-    inv_links: 'List[Node]'
+    links: "List[Edge]"
+    inv_links: "List[Node]"
 
 
 @dataclasses.dataclass
@@ -79,7 +79,4 @@ class Graph:
             visited |= network
             networks.append(network)
 
-        return [
-            [self._nodes[g] for g in network]
-            for network in networks
-        ]
+        return [[self._nodes[g] for g in network] for network in networks]

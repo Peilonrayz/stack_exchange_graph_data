@@ -66,45 +66,37 @@ from typing import Generator, Optional
 
 from defusedxml import ElementTree
 
-from .coroutines import data_sources as ds, links, nodes
+from .coroutines import data_sources as ds
+from .coroutines import links, nodes
 from .helpers import coroutines, progress
 from .segd import cache, file_system, site_info
 
 
 def load_xml_stream(
-    file_path: pathlib.Path,
-    progress_message: Optional[str] = None
+    file_path: pathlib.Path, progress_message: Optional[str] = None
 ) -> progress.ItemProgressStream:
     """Load an iterable xml file with a progress bar."""
     all_posts = ElementTree.parse(file_path).getroot()
     return progress.ItemProgressStream(
-        all_posts,
-        len(all_posts),
-        prefix='  ',
-        message=progress_message,
+        all_posts, len(all_posts), prefix="  ", message=progress_message,
     )
 
 
 def links_driver(
-    arguments: argparse.Namespace,
-    _site_info: site_info.SiteInfo,
+    arguments: argparse.Namespace, _site_info: site_info.SiteInfo,
 ) -> Generator:
     """Build the control flow for links."""
     links_mid = links.filter_duplicates(
         links.filter_network_size(
             arguments,
             links.sheet_prep(
-                coroutines.file_sink(arguments.output + '.edges.csv', 'w'),
+                coroutines.file_sink(arguments.output + ".edges.csv", "w"),
             ),
         ),
     )
     return links.handle_links(
         links.filter_links(
-            (
-                {_site_info.domain}
-                if arguments.no_expand_meta else
-                _site_info.domains
-            ),
+            ({_site_info.domain} if arguments.no_expand_meta else _site_info.domains),
             links_mid,
         ),
         links_mid,
@@ -114,39 +106,32 @@ def links_driver(
 def nodes_driver(arguments: argparse.Namespace) -> Generator:
     """Build the control flow for nodes."""
     return nodes.handle_nodes(
-        coroutines.file_sink(arguments.output + '.nodes.csv', 'w'),
+        coroutines.file_sink(arguments.output + ".nodes.csv", "w"),
     )
 
 
 def navigate(
-    _file_system: file_system.FileSystem,
-    arguments: argparse.Namespace,
+    _file_system: file_system.FileSystem, arguments: argparse.Namespace,
 ) -> None:
     """Build and navigate the coroutine control flow."""
     _site_info = _file_system.get_site_info(
-        arguments.site_name,
-        not arguments.download,
+        arguments.site_name, not arguments.download,
     )
     _links = links_driver(arguments, _site_info)
     coroutine_delegator = coroutines.CoroutineDelegator()
     coroutine_delegator.send_to(
         load_xml_stream(
             _file_system.get_site_file(
-                _site_info,
-                'Posts.xml',
-                not arguments.download,
+                _site_info, "Posts.xml", not arguments.download,
             ),
-            'Extracting data from posts.',
+            "Extracting data from posts.",
         ),
         ds.load_posts(ds.get_post_links(_links, nodes_driver(arguments))),
     )
     coroutine_delegator.send_to(
         load_xml_stream(
-            _file_system.get_site_file(
-                _site_info,
-                'Comments.xml',
-            ),
-            'Extracting data from comments.',
+            _file_system.get_site_file(_site_info, "Comments.xml",),
+            "Extracting data from comments.",
         ),
         ds.load_comments(_site_info.url, ds.get_comment_links(_links)),
     )
@@ -154,8 +139,10 @@ def navigate(
 
 
 def main(arguments):
-    file_system_ = file_system.FileSystem(cache.Cache(
-        pathlib.Path(arguments.cache_dir),
-        'https://archive.org/download/stackexchange/',
-    ))
+    file_system_ = file_system.FileSystem(
+        cache.Cache(
+            pathlib.Path(arguments.cache_dir),
+            "https://archive.org/download/stackexchange/",
+        )
+    )
     navigate(file_system_, arguments)

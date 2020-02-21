@@ -40,7 +40,7 @@ class CacheMethod:
         :param use_cache: Set to false to force redownload the data.
         :return: Location of file.
         """
-        raise NotImplementedError('Should be overwritten in subclass.')
+        raise NotImplementedError("Should be overwritten in subclass.")
 
 
 class FileCache(CacheMethod):
@@ -69,11 +69,7 @@ class FileCache(CacheMethod):
 class Archive7zCache(CacheMethod):
     """Exposes a cache that allows unzipping 7z archives."""
 
-    def __init__(
-        self,
-        cache_path: pathlib.Path,
-        archive_cache: CacheMethod,
-    ) -> None:
+    def __init__(self, cache_path: pathlib.Path, archive_cache: CacheMethod,) -> None:
         """Initialize Archive7zCache."""
         super().__init__(cache_path)
         self.archive_cache = archive_cache
@@ -89,8 +85,8 @@ class Archive7zCache(CacheMethod):
         :return: Location of file.
         """
         if not self._is_cached(use_cache):
-            with self.archive_cache.ensure(use_cache).open('rb') as input_file:
-                print(f'Unziping: {input_file.name}')
+            with self.archive_cache.ensure(use_cache).open("rb") as input_file:
+                print(f"Unziping: {input_file.name}")
                 archive = py7zlib.Archive7z(input_file)
                 directory = self.cache_path.parent
                 directory.mkdir(parents=True, exist_ok=True)
@@ -98,8 +94,8 @@ class Archive7zCache(CacheMethod):
                     output = directory / name
                     member = archive.getmember(name)
                     size = si.display(si.Magnitude.ibyte(member.size))
-                    print(f'  Unpacking[{size}] {name}')
-                    with output.open('wb') as output_file:
+                    print(f"  Unpacking[{size}] {name}")
+                    with output.open("wb") as output_file:
                         output_file.write(archive.getmember(name).read())
         return self.cache_path
 
@@ -122,9 +118,7 @@ class Cache:
         return FileCache(self.cache_dir / cache_path, url)
 
     def archive_7z(
-        self,
-        cache_path: pathlib.Path,
-        archive_cache: CacheMethod,
+        self, cache_path: pathlib.Path, archive_cache: CacheMethod,
     ) -> Archive7zCache:
         """
         Get an archive cache endpoint.

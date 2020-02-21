@@ -16,5 +16,5 @@ def main() -> None:
     driver.main(arguments)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

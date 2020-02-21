@@ -20,9 +20,9 @@ class SiteInfo:
 
     def __init__(self, domain: str) -> None:
         """Initialize SiteInfo."""
-        domain = domain.split('/')[2]
+        domain = domain.split("/")[2]
         self.domain = domain
-        self.url = 'https://' + domain
+        self.url = "https://" + domain
         (
             self.main_name,
             self.tld,
@@ -34,7 +34,7 @@ class SiteInfo:
             self._gen_domain(False),
             self._gen_domain(True),
         }
-        self.name = ('meta.' if self.is_meta else '') + self.main_name
+        self.name = ("meta." if self.is_meta else "") + self.main_name
 
     def _get_meta(self, segments: List[str]) -> Tuple[bool, bool]:
         """
@@ -44,11 +44,11 @@ class SiteInfo:
         :return: - If the site is a meta site.
                  - The form the URL is in.
         """
-        is_meta = 'meta' in segments
+        is_meta = "meta" in segments
         url_form = True
         if is_meta:
-            url_form = not segments.index('meta')
-            segments.remove('meta')
+            url_form = not segments.index("meta")
+            segments.remove("meta")
         return is_meta, url_form
 
     def _split_domain(self, domain: str) -> Tuple[str, str, bool, bool, bool]:
@@ -58,9 +58,9 @@ class SiteInfo:
         :param domain: The domain of the site.
         :return: All information extractable from the domain.
         """
-        *segments, hostname, tld = domain.split('.')
+        *segments, hostname, tld = domain.split(".")
         segments = list(segments)
-        is_stackexchange = hostname == 'stackexchange'
+        is_stackexchange = hostname == "stackexchange"
         url_form = True
         if not is_stackexchange:
             is_meta, _ = self._get_meta(segments)
@@ -69,9 +69,9 @@ class SiteInfo:
             if segments:
                 hostname = segments.pop(0)
             else:
-                hostname = 'meta'
+                hostname = "meta"
         return (
-            '.'.join(segments + [hostname]),
+            ".".join(segments + [hostname]),
             tld,
             is_stackexchange,
             is_meta,
@@ -89,11 +89,11 @@ class SiteInfo:
         _url_form = not self._url_form if old_meta else self._url_form
         name = (
             self.main_name
-            if not self.is_meta or self.main_name == 'meta' else
-            f'meta.{self.main_name}'
-            if _url_form else
-            f'{self.main_name}.meta'
+            if not self.is_meta or self.main_name == "meta"
+            else f"meta.{self.main_name}"
+            if _url_form
+            else f"{self.main_name}.meta"
         )
         if self.is_stackexchange:
-            name += '.stackexchange'
-        return f'{name}.{self.tld}'
+            name += ".stackexchange"
+        return f"{name}.{self.tld}"
